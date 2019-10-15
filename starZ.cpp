@@ -1,7 +1,7 @@
 // starZ.cpp   A demonstration of ASCII Art printing C characters
 
-#include <iostream>
 #include <cstdlib>
+#include <iostream>
 #include <string>
 using namespace std;
 
@@ -9,15 +9,31 @@ void assertEquals(string expected, string actual, string message);
 string starZ(int width);
 void runTests(void);
 
-// Write starZ per specifictions at 
+// Write starZ per specifictions at
 // https://foo.cs.ucsb.edu/16wiki/index.php/F14:Labs:lab04
 // and so that internal tests pass, and submit.cs system tests pass
 
+string starZ(int width) {
+  if (width < 3) {
+    return "";
+  }
 
-string starZ(int width)
-{
-  string result="";
-  result = "stub"; // TODO: remove this line, replace with correct code
+  const string horizontal(width, '*');
+
+  string result = horizontal;
+
+  result += "\n";
+
+  for (int i = 1; i < width - 1; i++) {
+    result += string(width - 1 - i, ' ');
+    result += "*";
+    result += string(i, ' ');
+    result += "\n";
+  }
+
+  result += horizontal;
+  result += "\n";
+
   return result;
 }
 
@@ -26,55 +42,58 @@ string starZ(int width)
 void runTests(void) {
 
   // The following line works because in C and C++ when string literals
-  // are separated only by whitespace (space, tab, newline), they 
+  // are separated only by whitespace (space, tab, newline), they
   // automatically get concatenated into a single string literal
 
-  string starZ3Expected = 
-    "***\n"
-    " * \n"
-    "***\n";
-  
-  assertEquals(starZ3Expected,starZ(3),"starZ(3)");
+  string starZ3Expected = "***\n"
+                          " * \n"
+                          "***\n";
 
-  string starZ4Expected = 
-    "****\n"
-    "  * \n"
-    " *  \n"
-    "****\n";
-  
-  assertEquals(starZ4Expected,starZ(4),"starZ(4)");
+  assertEquals(starZ3Expected, starZ(3), "starZ(3)");
 
-  assertEquals("",starZ(0),"starZ(0)");
-  assertEquals("",starZ(2),"starZ(2)");
+  string starZ4Expected = "****\n"
+                          "  * \n"
+                          " *  \n"
+                          "****\n";
+
+  assertEquals(starZ4Expected, starZ(4), "starZ(4)");
+
+  assertEquals("", starZ(0), "starZ(0)");
+  assertEquals("", starZ(2), "starZ(2)");
 }
 
 // Test harness
 
-void assertEquals(string expected, string actual, string message="") {
-  if (expected==actual) {
-    cout << "PASSED: " << message << endl;;
+void assertEquals(string expected, string actual, string message = "") {
+  if (expected == actual) {
+    cout << "PASSED: " << message << endl;
+    ;
   } else {
-    cout << "   FAILED: " << message << endl << "   Expected:[\n" << expected << "] actual = [\n" << actual << "]\n" << endl;
+    cout << "   FAILED: " << message << endl
+         << "   Expected:[\n"
+         << expected << "] actual = [\n"
+         << actual << "]\n"
+         << endl;
   }
 }
 
-
 // Main function
 
-int main(int argc, char *argv[])
-{
+int main(int argc, char *argv[]) {
+  if (argc != 3) {
+    cerr << "Usage: " << argv[0] << " width height" << endl;
+    exit(1);
+  }
 
-  // TODO: Add check for parameter
-  // and code to print usage message
+  int width = stoi(argv[1]);
+  int height = stoi(argv[2]);
+  // If the program is executed with parameters -1 -1 unit test
+  // the starL() function using our automated test framework
+  if (width == -1 && height == -1) {
+    runTests();
+    exit(0);
+  }
 
-  // TODO: Add code to get width from cmd line arg
-  // code that checks if it is -1; if so, call runTests()
-  // then exit.
-
-  runTests();
-
-  // TODO: Add code that calls the starZ function and prints
-  // the result on cout (without an extra newline)
-
+  cout << starZ(width);
   return 0;
 }
